@@ -89,6 +89,7 @@ app.post("/signup", (req, res) => {
   res.send({
     message: "You have signed up",
   });
+  console.log(users);
 });
 //Sign in
 app.post("/signin", (req, res) => {
@@ -110,6 +111,27 @@ app.post("/signin", (req, res) => {
   } else {
     res.status(403).send({
       message: "Invalid username or password",
+    });
+  }
+  console.log(users);
+});
+// User found through the token
+app.get("/me", (req, res) => {
+  const token = req.headers.token;
+  let foundUser = null;
+  for (i = 0; i < users.length; i++) {
+    if (users[i].token === token) {
+      foundUser = users[i];
+    }
+  }
+  if (foundUser) {
+    res.json({
+      username: foundUser.username,
+      password: foundUser.password,
+    });
+  } else {
+    res.send({
+      message: "Invalid token",
     });
   }
 });
